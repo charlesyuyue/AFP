@@ -20,7 +20,7 @@ def remove_stop_words(seg_list):
     '''
         Helper function to remove all stop words from a list
     '''
-    f_stop = open(r"F:\AFP\data\stopwords.txt", encoding="utf8")
+    f_stop = open(r"stopwords.txt", encoding="utf-8-sig")
     f_stop_text = f_stop.read()
     f_stop.close()
     stop_word_set = set(f_stop_text.split('\n'))
@@ -84,12 +84,20 @@ def output_dict_as_csv(output_dict, file_path, section_string):
         for key, value in output_dict.items():
             writer.writerow([key, value])
 
-def parse_for_chapter_text(file_path):
+def extract_desired_text_section(txt_string, section_string):
+    # TODO
+    return ""
+
+def parse(file_path, section_string):
     '''
-        Parsing
+        Parse the given text file, look for the desired section,
+        and output word count as a csv file
     '''
     # Read the text file into one string
     txt_string = read_txt_file_as_string(file_path)
+
+    # Extract the desired text section
+    # txt_string = extract_desired_text_section(txt_string, section_string)
     # print(txt_string) # For testing purposes
 
     # Segregated into a list and remove stop words
@@ -99,9 +107,9 @@ def parse_for_chapter_text(file_path):
     word_dict = count_word_frequency_as_dict(seg_list)
 
     # Output the dictionary as a csv file
-    output_dict_as_csv(word_dict, file_path, "acct_policy")
+    output_dict_as_csv(word_dict, file_path, section_string)
 
 if __name__ == "__main__":
     # for each file name, parse and output
     f = r"F:\AFP\data\ChinaAnnualReports\2007\000001.SZ.txt"
-    parse_for_chapter_text(f)
+    parse(f, "acct_policy")
