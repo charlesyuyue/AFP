@@ -43,8 +43,8 @@ def count_word_frequency_as_dict(word_list):
             freq_dict[word] = 1
 
     # Sort the frequencies from high to low
-    sorted_freq_dict = sorted(freq_dict.items(), key=lambda asd: asd[1], reverse=True)
-    return sorted_freq_dict
+    # sorted_freq_dict = sorted(freq_dict.items(), key=lambda asd: asd[1], reverse=True)
+    return freq_dict
 
 def read_txt_file_as_string(txt_file):
     '''
@@ -55,7 +55,7 @@ def read_txt_file_as_string(txt_file):
         print(txt_file, "not exists. Please check")
         return ""
 
-    with open(txt_file, 'r', encoding='utf8') as text_file:
+    with open(txt_file, 'r', encoding='utf-8-sig') as text_file:
         txt_string = text_file.readlines()
         res_string = ""
         for str in txt_string:
@@ -71,8 +71,15 @@ def output_dict_as_csv(output_dict, file_path, section_string):
         Helper function to output dictionary of word counts to a csv
     """
     #
-    output_csv_path = ""
-    with open(output_csv_path, 'w') as csv_file:
+    output_dir_path = os.path.join(os.path.dirname(file_path),
+                                   section_string)
+    if not os.path.exists(output_dir_path):
+        os.makedirs(output_dir_path)
+    output_filename = os.path.basename(file_path).replace(".txt","") + ".csv"
+    output_csv_path = os.path.join(output_dir_path,
+                                   output_filename)
+
+    with open(output_csv_path, 'w', newline='', encoding='utf-8-sig') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in output_dict.items():
             writer.writerow([key, value])
@@ -92,7 +99,7 @@ def parse_for_chapter_text(file_path):
     word_dict = count_word_frequency_as_dict(seg_list)
 
     # Output the dictionary as a csv file
-    output_dict_as_csv(word_dict, file_path)
+    output_dict_as_csv(word_dict, file_path, "acct_policy")
 
 if __name__ == "__main__":
     # for each file name, parse and output
