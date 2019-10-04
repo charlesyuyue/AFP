@@ -93,7 +93,7 @@ def parse_for_chapter_text(file_path):
 
     # Output the dictionary as a csv file
     output_dict_as_csv(word_dict, file_path)
-    # test for github integreation
+
 if __name__ == "__main__":
     # for each file name, parse and output
     f = r"F:\AFP\data\ChinaAnnualReports\2007\000001.SZ.txt"
