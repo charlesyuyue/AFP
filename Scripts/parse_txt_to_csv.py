@@ -46,7 +46,7 @@ def count_word_frequency_as_dict(word_list):
     # sorted_freq_dict = sorted(freq_dict.items(), key=lambda asd: asd[1], reverse=True)
     return freq_dict
 
-def read_txt_file_as_string(txt_file):
+def extract_desired_txt_as_string(txt_file, section_string):
     '''
         Given a text file, read in, remove all empty lines and return as one line of string
     '''
@@ -55,16 +55,32 @@ def read_txt_file_as_string(txt_file):
         print(txt_file, "not exists. Please check")
         return ""
 
-    with open(txt_file, 'r', encoding='utf-8-sig') as text_file:
-        txt_string = text_file.readlines()
-        res_string = ""
-        for str in txt_string:
-            if str.strip():
-                res_string += str.replace('\n','')
+    # Initialize
+    extracted_text = ""
+    if_to_be_recorded = False
+    starting_string = RULE_DICT[section_string]["starting_string"]
+    ending_string = RULE_DICT[section_string]["ending_string"]
 
-        # Remove non chinese characters
-        res_string = filter_out_non_chinese_characters(res_string)
-        return res_string
+    with open(txt_file, 'r', encoding='utf-8-sig') as text_file:
+        for line in text_file.readlines():
+            if line.strip():
+                if not if_to_be_recorded:
+                    # if have not started to record, check if it is the starting string
+                    if starting_string in line:
+                        if_to_be_recorded = True
+                        extracted_text += line.replace('\n','')
+                else:
+                    # if in the process of recording, check if it is the ending string
+                    if ending_string in line:
+                        break
+                    else:
+                        # record the current line
+                        extracted_text += line.replace('\n', '')
+
+    # Remove non chinese characters
+    print(extracted_text)
+    res_string = filter_out_non_chinese_characters(extracted_text)
+    return res_string
 
 def output_dict_as_csv(output_dict, file_path, section_string):
     """
@@ -84,9 +100,17 @@ def output_dict_as_csv(output_dict, file_path, section_string):
         for key, value in output_dict.items():
             writer.writerow([key, value])
 
-def extract_desired_text_section(txt_string, section_string):
-    # TODO
-    return ""
+def read_in_parsing_rule_definition():
+    rule_dict = {}
+    with open("parsing_rules.csv", encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader, None)  # skip the headers:
+        for row in csv_reader:
+            rule_dict[row[0]] = {}
+            rule_dict[row[0]]["starting_string"] = row[1]
+            rule_dict[row[0]]["ending_string"] = row[2]
+    return rule_dict
+
 
 def parse(file_path, section_string):
     '''
@@ -94,7 +118,7 @@ def parse(file_path, section_string):
         and output word count as a csv file
     '''
     # Read the text file into one string
-    txt_string = read_txt_file_as_string(file_path)
+    txt_string = extract_desired_txt_as_string(file_path, section_string)
 
     # Extract the desired text section
     # txt_string = extract_desired_text_section(txt_string, section_string)
@@ -110,6 +134,10 @@ def parse(file_path, section_string):
     output_dict_as_csv(word_dict, file_path, section_string)
 
 if __name__ == "__main__":
+    # Read in rule definition csv
+    RULE_DICT = read_in_parsing_rule_definition()
+
     # for each file name, parse and output
-    f = r"F:\AFP\data\ChinaAnnualReports\2007\000001.SZ.txt"
-    parse(f, "acct_policy")
+    f = r"F:\AFP\data\ChinaAnnualReports\2007\000768.SZ.txt"
+    section_string = "acct_policy"
+    parse(f, section_string)
