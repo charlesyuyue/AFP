@@ -4,16 +4,16 @@ Module to calculate similarity scores from two csv files
 import csv
 import math
 
-def read_csv_into_dict(csv_file):
+def read_csv_into_dict(csv_path):
     '''
     Read the frequency count csv files into a dictionary
     '''
     res_dict = {}
-    with open(csv_file) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=' ')
+    with open(csv_path, encoding='utf-8-sig') as csv_path:
+        csv_reader = csv.reader(csv_path)
         for row in csv_reader:
-            if row[0] and row[1]:
-                res_dict[row[0]] = int(res_dict[row[1]])
+            if row:
+                res_dict[row[0]] = int(row[1])
     return res_dict
 
 def calc_cos_similarity(dict_1, dict_2):
@@ -64,3 +64,8 @@ def calc_cos_similarity(dict_1, dict_2):
 
     score = float(dot_product) / (math.sqrt(mod_first_vector) * math.sqrt(mod_second_vector))
     return score
+
+# Testing
+s = calc_cos_similarity(read_csv_into_dict(r"F:\AFP\data\ChinaAnnualReports\2007\acct_policy\000001.SZ.csv"),
+                    read_csv_into_dict(r"F:\AFP\data\ChinaAnnualReports\2007\acct_policy\000001.SZ.csv"))
+print(s)

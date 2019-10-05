@@ -101,6 +101,9 @@ def output_dict_as_csv(output_dict, file_path, section_string):
             writer.writerow([key, value])
 
 def read_in_parsing_rule_definition():
+    '''
+        Read parsing rules into a dictionary of dictionary
+    '''
     rule_dict = {}
     with open("parsing_rules.csv", encoding='utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file)
