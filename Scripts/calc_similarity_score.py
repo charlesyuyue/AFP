@@ -67,5 +67,5 @@ def calc_cos_similarity(dict_1, dict_2):
 
 # Testing
 s = calc_cos_similarity(read_csv_into_dict(r"F:\AFP\data\ChinaAnnualReports\2007\acct_policy\000001.SZ.csv"),
-                    read_csv_into_dict(r"F:\AFP\data\ChinaAnnualReports\2007\acct_policy\000001.SZ.csv"))
+                    read_csv_into_dict(r"F:\AFP\data\ChinaAnnualReports\2009\acct_policy\000001.SZ.csv"))
 print(s)

@@ -78,7 +78,7 @@ def extract_desired_txt_as_string(txt_file, section_string):
                         extracted_text += line.replace('\n', '')
 
     # Remove non chinese characters
-    print(extracted_text)
+    # print(extracted_text)
     res_string = filter_out_non_chinese_characters(extracted_text)
     return res_string
 
@@ -137,10 +137,19 @@ def parse(file_path, section_string):
     output_dict_as_csv(word_dict, file_path, section_string)
 
 if __name__ == "__main__":
+
+    data_dir = r"F:\AFP\data\ChinaAnnualReports"
+
     # Read in rule definition csv
     RULE_DICT = read_in_parsing_rule_definition()
 
-    # for each file name, parse and output
-    f = r"F:\AFP\data\ChinaAnnualReports\2007\000768.SZ.txt"
-    section_string = "acct_policy"
-    parse(f, section_string)
+    # For each folder in the data directory
+    for folder_name in os.listdir(data_dir):
+        year_folder_path = os.path.join(data_dir, folder_name)
+        print("Parsing:", folder_name)
+        for file_name in os.listdir(year_folder_path):
+            if file_name.endswith(".txt"):
+                txt_file_path = os.path.join(year_folder_path, file_name)
+                section_string = "acct_policy"
+                parse(txt_file_path, section_string)
+
